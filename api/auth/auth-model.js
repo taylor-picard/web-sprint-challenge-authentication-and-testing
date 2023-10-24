@@ -1,8 +1,8 @@
 const db = require('../../data/dbConfig');
 
-function findId(user_id){
-    return db('users').select('user_id', 'username')
-    .where('user_id', user_id).first()
+function findId(id){
+    return db('users').select('id', 'username')
+    .where('id', id).first()
 }
 
 function findUsername(username) {
