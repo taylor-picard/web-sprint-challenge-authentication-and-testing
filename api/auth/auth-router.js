@@ -3,9 +3,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const secrets = require('../secrets/index');
 const { JWT_SECRET } = require("../secrets");
+const db = require('../../data/dbConfig');
 
-router.post('/register', (req, res, next) => {
-  next()
+router.post('/register', checkUsername, (req, res, next) => {
+  const {username, password} = req.body;
+  const hash = bcrypt.hashSync(password, 8);
+
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
