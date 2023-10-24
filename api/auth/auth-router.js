@@ -3,12 +3,25 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const secrets = require('../secrets/index');
 const { JWT_SECRET } = require("../secrets");
-const db = require('../../data/dbConfig');
 const {checkUsernameFree, checkUsernameExists} = require('../middleware/checkUsername');
+const Users = require('./auth-model');
 
 router.post('/register', checkUsernameFree, (req, res, next) => {
   const {username, password} = req.body;
-  const hash = bcrypt.hashSync(password, 8);
+  if(username && password){
+    const hash = bcrypt.hashSync(password, 8);
+    Users.addUser({username, password:hash})
+    .then(newUser => {
+      res.status(201).json(newUser)
+    })
+    .catch(next)
+  }else{
+    res.json({
+      message: "username and password required"
+    })
+  }
+  
+  
 
   /*
     IMPLEMENT
