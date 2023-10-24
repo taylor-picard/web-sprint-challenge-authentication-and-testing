@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken');
 const secrets = require('../secrets/index');
 const { JWT_SECRET } = require("../secrets");
 const db = require('../../data/dbConfig');
+const {checkUsernameFree, checkUsernameExists} = require('../middleware/checkUsername');
 
-router.post('/register', checkUsername, (req, res, next) => {
+router.post('/register', checkUsernameFree, (req, res, next) => {
   const {username, password} = req.body;
   const hash = bcrypt.hashSync(password, 8);
 
@@ -36,7 +37,7 @@ router.post('/register', checkUsername, (req, res, next) => {
   */
 });
 
-router.post('/login', (req, res, next) => {
+router.post('/login', checkUsernameExists, (req, res, next) => {
   next()
   /*
     IMPLEMENT
