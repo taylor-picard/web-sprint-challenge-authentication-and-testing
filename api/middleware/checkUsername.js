@@ -25,7 +25,7 @@ async function checkUsernameExists(req, res, next) {
             next()
         }else{
             res.status(401).json({
-                message: "user not found"
+                message: "invalid credentials"
             })
         }
     }catch(err){

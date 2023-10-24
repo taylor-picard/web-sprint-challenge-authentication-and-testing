@@ -52,7 +52,17 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 });
 
 router.post('/login', checkUsernameExists, (req, res, next) => {
-  next()
+  if(bcrypt.compareSync(req.body.password, req.user.password)) {
+    const token = genToken(req.user)
+    res.status(200).json({
+      message: `welcome, ${req.user.username}`,
+      token
+    })
+  }else{
+    next({
+      message: "invalid credentials"
+    })
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -77,5 +87,16 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+function genToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username,
+  }
+  const options = {
+    expiresIn: '1d'
+  }
+  return jwt.sign(payload, JWT_SECRET, options)
+}
 
 module.exports = router;
