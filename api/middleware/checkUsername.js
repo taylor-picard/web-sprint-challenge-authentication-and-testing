@@ -33,7 +33,7 @@ async function checkUsernameExists(req, res, next) {
             next(err)
         }
     }else{
-        res.json({
+        res.status(400).json({
             message: "username and password required"
         })
     }
