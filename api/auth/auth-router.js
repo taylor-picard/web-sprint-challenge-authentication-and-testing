@@ -8,7 +8,7 @@ const { JWT_SECRET } = require('../secrets');
 router.post('/register', checkUsernameFree, (req, res, next) => {
   const {username, password} = req.body;
   if(!username || !password){
-    res.json({
+    res.status(400).json({
       message: "username and password required"
     })
   }else{
@@ -52,7 +52,11 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 });
 
 router.post('/login', checkUsernameExists, (req, res, next) => {
-  if(bcrypt.compareSync(req.body.password, req.user.password)) {
+  if(!req.body.username || !req.body.password) {
+    res.json({
+      message: "username and password required"
+    })}
+  else if(bcrypt.compareSync(req.body.password, req.user.password)) {
     const token = genToken(req.user)
     res.status(200).json({
       message: `welcome, ${req.user.username}`,
